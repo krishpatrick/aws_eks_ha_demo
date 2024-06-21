@@ -24,25 +24,25 @@ Optional
 
 Steps - Raw Details
 
-* # aws configure 
-* # Then proceed with create prerequisite tf files
-* # Vpc, route , subnets gateway nat etc and init and apply
-* # Create eks
-* # Create fargate profiles - coreDNS etc . 
-* # Create additional fargate profile with namespace
-* # Deploy Nginx sample app using helm (Edit and change the values as needed)
-* # Enable hpa settings optionally
-* # kubectl create namespace staging
-* # helm repo add stable https://charts.helm.sh/stable
-* # helm repo update
+*  aws configure 
+*  Then proceed with create prerequisite tf files
+*  Vpc, route , subnets gateway nat etc and init and apply
+*  Create eks
+*  Create fargate profiles - coreDNS etc . 
+*  Create additional fargate profile with namespace
+*  Deploy Nginx sample app using helm (Edit and change the values as needed)
+*  Enable hpa settings optionally
+*  kubectl create namespace staging
+*  helm repo add stable https://charts.helm.sh/stable
+*  helm repo update
 
-* # kubectl create namespace nginx-app (you can skip this as we already have a staging name space)
-* # kubectl create namespace staging
+*  kubectl create namespace nginx-app (you can skip this as we already have a staging name space)
+*  kubectl create namespace staging
 
-# helm install nginx-sample ./nginx-sample --namespace staging
+ helm install nginx-sample ./nginx-sample --namespace staging
 
-# Service be Cluster IP or NodePort - LB will create NLB. Unless needed we Opt to use ALB for this purpose
-# kubectl get deployment -n staging
+ Service be Cluster IP or NodePort - LB will create NLB. Unless needed we Opt to use ALB for this purpose
+ kubectl get deployment -n staging
 
   	kubectl get pods --namespace staging
  	kubectl get services --namespace staging
@@ -51,18 +51,18 @@ Steps - Raw Details
 	kubectl get hpa -A
 
 
-# metrics-server.tf to monitor the pods
+ metrics-server.tf to monitor the pods
 
  terraform init
  terraform apply
 
-# issues
+# issues and Status
 kubectl get deployment -n kube-system
 kubectl edit deployment metrics-server -n kube-system
 
 Change to new error 403 forbidden by fargate for metrics server , Moving on ( TODO)
 
-# Deploy busybox for load testing and hpa (Skipped) (TODO)
+# Deploy busybox for load testing and hpa (Done) (TODO-DEMO)
 
 ALB did not work 
 
@@ -74,15 +74,14 @@ Used other Alternative steps to isolate the issue. It could be something in the 
 
 Plan A did not work, Plan B FOLLOWED AWS DOCUMENTATION STEPS USING HELM/EKSCTL
 
-# Ingress host field did not work, Analyzing. Removed - 
-  Issue fixed during SSL setup.
-# Enabled SSL on existing ALB
+ Ingress host field did not work, Analyzing. Removed - 
+ Issue fixed during SSL setup.
 
 #TODO
-# Security
-# Documentation Work
-# Pros and Cons Doc
-# Arch Diagram
-# Module'ise Terra 
-# Terra Best practices in AWS
-# Remember to gitignore
+ Security
+ Documentation Work
+ Pros and Cons Doc
+ Arch Diagram
+ Module'ise Terra 
+ Terra Best practices in AWS
+ Remember to gitignore
