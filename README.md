@@ -77,7 +77,10 @@ Plan A did not work, Plan B FOLLOWED AWS DOCUMENTATION STEPS USING HELM/EKSCTL
  Ingress host field did not work, Analyzing. Removed - 
  Issue fixed during SSL setup.
 
-#TODO
+* Run Load test using below command . This can be useful to verify if HPA works correctly
+kubectl run -i --tty -n staging load-generator --pod-running-timeout=5m0s --rm --image=busybox:1.28 --restart=Never -- /bin/sh -c "while sleep 0.01; do wget -q -O- http://demo-nginx.mmscs.nl; curl http://demo-nginx.mmscs.nl;  done"
+
+# TODO
  Security
  Documentation Work
  Pros and Cons Doc
