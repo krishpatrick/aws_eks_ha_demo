@@ -65,11 +65,11 @@ resources:
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
    limits:
-     cpu: 200m
-     memory: 256Mi
+     cpu: 40m
+     memory: 128Mi
    requests:
-     cpu: 200m
-     memory: 256Mi
+     cpu: 40m
+     memory: 128Mi
 
 livenessProbe:
   httpGet:
@@ -82,9 +82,9 @@ readinessProbe:
 
 autoscaling:
   enabled: true
-  minReplicas: 2
-  maxReplicas: 4
-  targetCPUUtilizationPercentage: 40
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 10
   # targetMemoryUtilizationPercentage: 80
 
 # Additional volumes on the output Deployment definition.
