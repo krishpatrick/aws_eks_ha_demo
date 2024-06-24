@@ -58,7 +58,8 @@ Steps - Raw Details
 	 terraform apply
 
 * Alternative steps AWS preferred to install the loadbalncer controller.
-
+* https://docs.aws.amazon.com/eks/latest/userguide/lbc-helm.html
+```
   	curl -O https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.7.2/docs/install/iam_policy.json
 
 	aws iam create-policy \
@@ -85,7 +86,7 @@ Steps - Raw Details
 	  --set vpcId=vpc-id
 
 	kubectl get deployment -n kube-system aws-load-balancer-controller ( You must see 2 replicas running and the LB is created. Verify from AWS console )
-
+```
 # Check Status
 	kubectl get deployment -n kube-system
 	kubectl edit deployment metrics-server -n kube-system
