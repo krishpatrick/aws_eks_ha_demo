@@ -1,4 +1,4 @@
-resource "aws_vpc" "main" {
+resource "aws_vpc" "main2" {
   cidr_block = "10.0.0.0/16"
 
   # Must be enabled for usage like for example EFS
@@ -6,6 +6,6 @@ resource "aws_vpc" "main" {
   enable_dns_hostnames = true
 
   tags = {
-    Name = "main"
+    Name = "main2"
   }
 }

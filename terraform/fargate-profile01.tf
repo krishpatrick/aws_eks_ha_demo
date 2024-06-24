@@ -1,10 +1,10 @@
 resource "aws_eks_fargate_profile" "fp-default" {
-  cluster_name           = aws_eks_cluster.cluster.name
-  fargate_profile_name   = "fp-default"
-  pod_execution_role_arn = aws_iam_role.fargate_pod_execution_role.arn
+  cluster_name           = aws_eks_cluster.cluster2.name
+  fargate_profile_name   = "fp-default2"
+  pod_execution_role_arn = aws_iam_role.fargate_pod_execution_role2.arn
   subnet_ids = [
-    aws_subnet.private-eu-central-1a.id,
-    aws_subnet.private-eu-central-1b.id
+    aws_subnet.private2-eu-central-1a.id,
+    aws_subnet.private2-eu-central-1b.id
   ]
 
   selector {
@@ -18,11 +18,11 @@ resource "aws_eks_fargate_profile" "fp-default" {
 
 resource "aws_iam_role_policy_attachment" "AmazonEKSFargatePodExecutionRolePolicy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSFargatePodExecutionRolePolicy"
-  role       = aws_iam_role.fargate_pod_execution_role.name
+  role       = aws_iam_role.fargate_pod_execution_role2.name
 }
 
-resource "aws_iam_role" "fargate_pod_execution_role" {
-  name                  = "eks-fargate-pod-execution-role"
+resource "aws_iam_role" "fargate_pod_execution_role2" {
+  name                  = "eks-fargate-pod-execution-role2"
   force_detach_policies = true
 
   assume_role_policy = <<POLICY

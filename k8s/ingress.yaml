@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: nginx-sample
+  name: nginx-sample2
   namespace: staging
   annotations:
     alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-central-1:230951218756:certificate/cbd98edf-8061-4a50-aae0-924fff79ff43
@@ -13,7 +13,7 @@ metadata:
 spec:
   ingressClassName: alb
   rules:
-    - host: demo-nginx.mmscs.nl
+    - host: demo-nginx2.mmscs.nl
       http:
         paths:
         - path: /

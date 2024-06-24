@@ -14,6 +14,28 @@ Steps - Overview
 * Improve Stability with Pod Disruption Budget
 * Create IAM OIDC provider Using Terraform
 * Create IAM and follow steps for AWS Load Balancer Controller creation using AWS preferred method (https://docs.aws.amazon.com/eks/latest/userguide/lbc-helm.html)
+curl -O https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.7.2/docs/install/iam_policy.json
+aws iam create-policy \
+    --policy-name AWSLoadBalancerControllerIAMPolicy \
+    --policy-document file://iam_policy.json
+eksctl create iamserviceaccount \
+  --cluster=my-cluster \
+  --namespace=kube-system \
+  --name=aws-load-balancer-controller \
+  --role-name AmazonEKSLoadBalancerControllerRole \
+  --attach-policy-arn=arn:aws:iam::111122223333:policy/AWSLoadBalancerControllerIAMPolicy \
+  --approve
+ helm repo add eks https://aws.github.io/eks-charts
+ helm repo update eks
+ helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
+  -n kube-system \
+  --set clusterName=my-cluster \
+  --set serviceAccount.create=false \
+  --set serviceAccount.name=aws-load-balancer-controller 
+  --set region=eu-central-1 \
+  --set vpcId=vpc-id
+ kubectl get deployment -n kube-system aws-load-balancer-controller ( You must see 2 replicas running and the LB is created. Verify from AWS console )
+
 * Deploy AWS Load Balancer Controller Using helm
 * Create Simple Ingress using k8s
 * Secure Ingress with SSL/TLS - Create certificate and update CNAME
@@ -56,35 +78,36 @@ Steps - Raw Details
  terraform init
  terraform apply
 
-# issues and Status
+* Alternative steps AWS preferred to install the loadbalncer controller.
+ 
+ curl -O https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.7.2/docs/install/iam_policy.json
+ aws iam create-policy \
+    --policy-name AWSLoadBalancerControllerIAMPolicy \
+    --policy-document file://iam_policy.json
+ eksctl create iamserviceaccount \
+  --cluster=my-cluster \
+  --namespace=kube-system \
+  --name=aws-load-balancer-controller \
+  --role-name AmazonEKSLoadBalancerControllerRole \
+  --attach-policy-arn=arn:aws:iam::111122223333:policy/AWSLoadBalancerControllerIAMPolicy \
+  --approve
+ helm repo add eks https://aws.github.io/eks-charts
+ helm repo update eks
+ helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
+  -n kube-system \
+  --set clusterName=my-cluster \
+  --set serviceAccount.create=false \
+  --set serviceAccount.name=aws-load-balancer-controller
+  --set region=eu-central-1 \
+  --set vpcId=vpc-id
+ kubectl get deployment -n kube-system aws-load-balancer-controller ( You must see 2 replicas running and the LB is created. Verify from AWS console )
+
+# Check Status
 kubectl get deployment -n kube-system
 kubectl edit deployment metrics-server -n kube-system
 
-Change to new error 403 forbidden by fargate for metrics server , Moving on ( TODO)
-
 # Deploy busybox for load testing and hpa (Done) (TODO-DEMO)
-
-ALB did not work 
-
-Error is here#
-  Warning  FailedDeployModel  5s    ingress  Failed deploy model due to AccessDenied: User: arn:aws:sts::xxxxxxx:assumed-role/aws-load-balancer-controller/1718902250792467738 is not authorized to perform: elasticloadbalancing:AddTags on resource: arn:aws:elasticloadbalancing:eu-central-1:xxxxxxx:targetgroup/k8s-staging-nginxsam-7ece1bb95a/* because no identity-based policy allows the elasticloadbalancing:AddTags action
-           status code: 403, request id: 860a2149-def0-4c04-a80e-51f05699bcf7
-
-Used other Alternative steps to isolate the issue. It could be something in the policy creation. so backed up these tf files for analyzing further. 
-
-Plan A did not work, Plan B FOLLOWED AWS DOCUMENTATION STEPS USING HELM/EKSCTL
-
- Ingress host field did not work, Analyzing. Removed - 
- Issue fixed during SSL setup.
 
 * Run Load test using below command . This can be useful to verify if HPA works correctly
 kubectl run -i --tty -n staging load-generator --pod-running-timeout=5m0s --rm --image=busybox:1.28 --restart=Never -- /bin/sh -c "while sleep 0.01; do wget -q -O- http://demo-nginx.mmscs.nl; curl http://demo-nginx.mmscs.nl;  done"
 
-# TODO
- Security
- Documentation Work
- Pros and Cons Doc
- Arch Diagram
- Module'ise Terra 
- Terra Best practices in AWS
- Remember to gitignore
