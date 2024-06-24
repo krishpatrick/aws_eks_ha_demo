@@ -4,8 +4,14 @@
 EKS infra setup - Terrform/Helm steps
 
 Steps - Overview
-
-* Create VPC Using Terraform
+* Before we proceed
+    1. awscli
+    2. go
+    3. Terraform
+    4. kubectl
+    5. helm
+    6. eksctl - In case if you want to configure something quickly or use it as a fall back for non working steps.
+* Create VPC, IGW, NAT, Subnets, routes and EKS Using Terraform
 * Create AWS EKS Fargate Using Terraform
 * Update CoreDNS to run on AWS Fargate Using Terraform
 * Deploy Nginx sample App to AWS Fargate Using Helm
@@ -16,16 +22,23 @@ Steps - Overview
 * Create IAM and follow steps for AWS Load Balancer Controller creation using AWS preferred method (https://docs.aws.amazon.com/eks/latest/userguide/lbc-helm.html)
 * Deploy AWS Load Balancer Controller Using helm
 * Create Simple Ingress using k8s
-* Secure Ingress with SSL/TLS - Create certificate and update CNAME
+* Secure Ingress with SSL/TLS - Create certificate and update DNS CNAME
 
 Optional 
 * Create Network Loadbalancer - By adding the correct k8s service type lb 
-* Secure with SSL/TLS - Verify - optional
+* Secure NLB With SSL/TLS - Verify - optional
 
 Steps - Raw Details
 
+* Before we proceed
+    1. awscli
+    2. go
+    3. Terraform
+    4. kubectl
+    5. helm
+    6. eksctl - In case if you want to configure something quickly or use it as a fall back for non working steps.
 *  aws configure 
-*  Then proceed with create prerequisite tf files
+*  Proceed with create prerequisite tf files
 *  Vpc, route , subnets gateway nat etc and init and apply
 *  Create eks
 *  Create fargate profiles - coreDNS etc . 
@@ -39,10 +52,10 @@ Steps - Raw Details
 *  kubectl create namespace nginx-app (you can skip this as we already have a staging name space)
 *  kubectl create namespace staging
 
- helm install nginx-sample ./nginx-sample --namespace staging
+* helm install nginx-sample ./nginx-sample --namespace staging
 
- Service be Cluster IP or NodePort - LB will create NLB. Unless needed we Opt to use ALB for this purpose
- kubectl get deployment -n staging
+* Service be Cluster IP or NodePort - LB will create NLB. Unless needed we Opt to use ALB for this purpose
+*  kubectl get deployment -n staging
 
   	kubectl get pods --namespace staging
  	kubectl get services --namespace staging
@@ -55,12 +68,13 @@ Steps - Raw Details
 
  terraform init
  terraform apply
+All files are in this Repo --> https://github.com/krishpatrick/aws_eks_ha_demo/tree/feat_nginx_demo/terraform
 
-# issues and Status
+
+# Issues and Status
 kubectl get deployment -n kube-system
 kubectl edit deployment metrics-server -n kube-system
 
-Change to new error 403 forbidden by fargate for metrics server , Moving on ( TODO)
 
 # Deploy busybox for load testing and hpa (Done) (TODO-DEMO)
 
@@ -74,17 +88,8 @@ Used other Alternative steps to isolate the issue. It could be something in the 
 
 Plan A did not work, Plan B FOLLOWED AWS DOCUMENTATION STEPS USING HELM/EKSCTL
 
- Ingress host field did not work, Analyzing. Removed - 
- Issue fixed during SSL setup.
+ Ingress host field did not work, Analyzing. Removed - Issue fixed during SSL setup.
 
 * Run Load test using below command . This can be useful to verify if HPA works correctly
 kubectl run -i --tty -n staging load-generator --pod-running-timeout=5m0s --rm --image=busybox:1.28 --restart=Never -- /bin/sh -c "while sleep 0.01; do wget -q -O- http://demo-nginx.mmscs.nl; curl http://demo-nginx.mmscs.nl;  done"
 
-# TODO
- Security
- Documentation Work
- Pros and Cons Doc
- Arch Diagram
- Module'ise Terra 
- Terra Best practices in AWS
- Remember to gitignore
