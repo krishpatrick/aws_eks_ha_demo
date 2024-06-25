@@ -26,19 +26,19 @@ Steps - Raw Details
 
 	*  aws configure 
 	*  Then proceed with create prerequisite tf files
-	*  Vpc, route , subnets gateway nat etc and init and apply
-	*  Create eks
+	*  Vpc, route , subnets, gateway, nat etc and run 
+        	terraform init, terraform apply
+	*  Create eks and run terraform init, terraform apply
 	*  Create fargate profiles - coreDNS etc . 
 	*  Create additional fargate profile with namespace
+        	terraform init, terraform apply
 	*  Deploy Nginx sample app using helm (Edit and change the values as needed)
-	*  Enable hpa settings optionally
+	*  Enable hpa settings optionally 
 	*  kubectl create namespace staging
 	*  helm repo add stable https://charts.helm.sh/stable
 	*  helm repo update
 	
-	*  kubectl create namespace nginx-app (you can skip this as we already have a staging name space)
-	*  kubectl create namespace staging
-	
+	*  kubectl create namespace <namespace> (you can skip this as we already have a staging name space)
 	* helm install nginx-sample ./nginx-sample --namespace staging
 
  Service be Cluster IP or NodePort - LB will create ALB. Unless needed we Opt to use ALB for this purpose
@@ -51,14 +51,11 @@ Steps - Raw Details
 	kubectl get hpa -A
 
 
- metrics-server.tf to monitor the pods
-
-	 terraform init
-  	
-	 terraform apply
-
-* Alternative steps AWS preferred to install the loadbalncer controller.
-* https://docs.aws.amazon.com/eks/latest/userguide/lbc-helm.html
+	* Add metrics-server.tf to monitor the pods
+		terraform init
+  		terraform apply
+	* Alternative steps AWS preferred to install the loadbalncer controller.
+	* https://docs.aws.amazon.com/eks/latest/userguide/lbc-helm.html
 ```
   	curl -O https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.7.2/docs/install/iam_policy.json
 
